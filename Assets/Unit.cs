@@ -9,4 +9,20 @@ public class Unit : MonoBehaviour
     public int currentHp;
     public int maxAp;
     public int currentAp;
+
+    public bool takeDmg(int dmg)
+    {
+        currentHp -= dmg;
+
+        if (currentHp <= 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    
 }
