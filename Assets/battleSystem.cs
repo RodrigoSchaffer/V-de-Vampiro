@@ -25,6 +25,8 @@ public class battleSystem : MonoBehaviour
 
     public battleState state;
 
+    public int turnCount;
+
     public BattleHud playerHud;
     public BattleHud enemyHud;
 
@@ -51,7 +53,7 @@ public class battleSystem : MonoBehaviour
         playerHud.setHuD(playerUnit);
         enemyHud.setHuD(enemyUnit);
 
-        combatLog.text = "An enemy " + enemyUnit.unitName + "appears";
+        combatLog.text = "An enemy " + enemyUnit.unitName + " appears";
 
         yield return new WaitForSeconds(2f);
 
@@ -63,30 +65,21 @@ public class battleSystem : MonoBehaviour
 
     void playerTurn()
     {
-        
+        combatLog.text = "choose an action";  
         
 
     }
 
     IEnumerator playerAttack()
     {
+        state = battleState.ENEMY_TURN;
 
-        
         bool isDead = enemyUnit.takeDmg(playerUnit.unitDmg);
 
         yield return new WaitForSeconds(2f);
 
-        if (isDead)
-        {
-            state = battleState.WON;
-            endBattle();
+        isOver(isDead, enemyUnit, true);
 
-        }
-        else
-        {
-            state = battleState.ENEMY_TURN;
-            StartCoroutine(enemyTurn());
-        }
         
         
     }
@@ -101,13 +94,46 @@ public class battleSystem : MonoBehaviour
         StartCoroutine(playerAttack());
     }
 
-    IEnumerator enemyTurn()
+    public void leech()
     {
-        combatLog.text = enemyUnit.unitName + "Attacks";
+        if (state != battleState.PLAYER_TURN)
+        {
+            return;
+        }
 
+        StartCoroutine(leechAttack());
+    }
 
+    IEnumerator leechAttack()
+    {
+        state = battleState.ENEMY_TURN;
+
+        playerUnit.currentHp += (playerUnit.unitDmg - 10)/2;
+        if (playerUnit.currentHp >= playerUnit.maxHp)
+        {
+            playerUnit.currentHp = playerUnit.maxHp;
+        }
+        
+        bool isDead = enemyUnit.takeDmg(playerUnit.unitDmg - 10);
 
         yield return new WaitForSeconds(2f);
+
+        isOver(isDead, enemyUnit, true);
+        
+        
+    }
+
+    IEnumerator enemyTurn()
+    {
+        combatLog.text = enemyUnit.unitName + " Attacks";
+
+        bool isDead = playerUnit.takeDmg(enemyUnit.unitDmg);
+
+        yield return new WaitForSeconds(2f);
+
+        isOver(isDead, enemyUnit, false);
+        
+
     }
 
 
@@ -128,9 +154,43 @@ public class battleSystem : MonoBehaviour
         
     }
 
+    public void isOver(bool isDead, Unit unit, bool isEnemy)
+    {
+        if (isEnemy == true)
+        {
+            if (isDead)
+            {
+                state = battleState.WON;
+                endBattle();
+
+            }
+            else
+            {
+                StartCoroutine(enemyTurn());
+            }
+        }
+        else
+        {
+            if (isDead)
+            {
+                state = battleState.LOST;
+                endBattle();
+
+            }
+            else
+            {
+                turnCount++;
+                state = battleState.PLAYER_TURN;
+                playerTurn();
+            }
+        }
+
+        
+    }
+
     // Update is called once per frame
     void Update()
     {
-
+ 
     }
 }

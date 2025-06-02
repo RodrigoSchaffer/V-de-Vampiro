@@ -16,6 +16,7 @@ public class Unit : MonoBehaviour
 
         if (currentHp <= 0)
         {
+            currentHp = 0;
             return true;
         }
         else
