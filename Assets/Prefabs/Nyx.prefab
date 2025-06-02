@@ -47,6 +47,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unitName: Nyx
   unitDmg: 25
+  block: 10
+  isBlocking: 0
   maxHp: 75
   currentHp: 75
   maxAp: 0

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Numerics;
 using Unity.Collections;
@@ -32,6 +33,7 @@ public class battleSystem : MonoBehaviour
 
     public Text combatLog;
 
+
     void Start()
     {
         state = battleState.START;
@@ -65,6 +67,7 @@ public class battleSystem : MonoBehaviour
 
     void playerTurn()
     {
+        playerUnit.isBlocking = false;
         combatLog.text = "choose an action";  
         
 
@@ -104,6 +107,16 @@ public class battleSystem : MonoBehaviour
         StartCoroutine(leechAttack());
     }
 
+    public void block()
+    {
+        if (state != battleState.PLAYER_TURN)
+        {
+            return;
+        }
+
+        StartCoroutine(blockAttacks());
+    }
+
     IEnumerator leechAttack()
     {
         state = battleState.ENEMY_TURN;
@@ -123,17 +136,81 @@ public class battleSystem : MonoBehaviour
         
     }
 
-    IEnumerator enemyTurn()
+    IEnumerator blockAttacks()
     {
-        combatLog.text = enemyUnit.unitName + " Attacks";
+        state = battleState.ENEMY_TURN;
+        playerUnit.isBlocking = true;
 
-        bool isDead = playerUnit.takeDmg(enemyUnit.unitDmg);
+        bool isDead = false;
 
         yield return new WaitForSeconds(2f);
 
-        isOver(isDead, enemyUnit, false);
+        isOver(isDead, enemyUnit, true);
+        
+        
+    }
+
+    IEnumerator enemyTurn()
+    {
+        
+        enemyUnit.isBlocking = false;
+
         
 
+        bool isDead = EnemyActionOptions();
+        yield return new WaitForSeconds(2f);
+
+        isOver(isDead, playerUnit, false);
+
+        
+    }
+
+    public bool EnemyActionOptions()
+    {
+        if (enemyUnit.currentAp <= 1)
+        {
+            int randNum = UnityEngine.Random.Range(0, 10);
+            if (randNum < 7)
+            {
+                combatLog.text = enemyUnit.unitName + " Used Slash";
+                return playerUnit.takeDmg(enemyUnit.unitDmg);
+            }
+            else if (randNum > 7)
+            {
+                combatLog.text = enemyUnit.unitName + " Used Block";
+                enemyUnit.isBlocking = true;
+                enemyUnit.currentAp -= 1;
+                return false;
+            }
+
+
+        }
+        else if (enemyUnit.currentAp > 1)
+        {
+            int randNum = UnityEngine.Random.Range(0, 10);
+            if (randNum <= 2)
+            {
+                combatLog.text = enemyUnit.unitName + " Used Slash";
+                return playerUnit.takeDmg(enemyUnit.unitDmg);
+            }
+            else if (randNum > 2 && randNum <= 5)
+            {
+                combatLog.text = enemyUnit.unitName + " Used Block";
+                enemyUnit.isBlocking = true;
+                enemyUnit.currentAp -= 1;
+                return false;
+            }
+            else if (randNum > 5) {
+                combatLog.text = enemyUnit.unitName + " Used Holy light";
+                enemyUnit.currentAp -= 2;
+                return playerUnit.takeDmg(enemyUnit.unitDmg + 10);
+            }
+            
+        }
+
+        return false;
+
+        
     }
 
 
@@ -151,7 +228,7 @@ public class battleSystem : MonoBehaviour
 
         }
 
-        
+
     }
 
     public void isOver(bool isDead, Unit unit, bool isEnemy)
@@ -181,6 +258,10 @@ public class battleSystem : MonoBehaviour
             {
                 turnCount++;
                 state = battleState.PLAYER_TURN;
+                if (enemyUnit.currentAp < 2)
+                {
+                    enemyUnit.currentAp++;
+                }
                 playerTurn();
             }
         }
