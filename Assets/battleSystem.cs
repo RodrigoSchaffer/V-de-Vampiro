@@ -17,8 +17,8 @@ public class battleSystem : MonoBehaviour
 
     public GameObject enemies;
 
-    private Animator pAnim;
-    private Animator enemyAnim;
+    [SerializeField] private Animator pAnim;
+    [SerializeField] private Animator enemyAnim;
 
     Unit playerUnit;
     
@@ -39,8 +39,6 @@ public class battleSystem : MonoBehaviour
 
     void Start()
     {
-        pAnim = playerPrefab.GetComponent<Animator>();
-        enemyAnim = enemies.transform.GetChild(0).GetComponent<Animator>();
 
 
         state = battleState.START;
@@ -50,7 +48,6 @@ public class battleSystem : MonoBehaviour
 
     IEnumerator setUpBattle()
     {
-
 
         playerUnit = playerPrefab.GetComponent<Unit>();
 
@@ -89,12 +86,13 @@ public class battleSystem : MonoBehaviour
     {
         state = battleState.ENEMY_TURN;
 
-        bool isDead = enemyUnit.takeDmg(playerUnit.unitDmg);
+        enemyUnit.takeDmg(playerUnit.unitDmg);
+        bool isDead = enemyUnit.isDead();
         enemyHud.setHp(enemyUnit);
 
         yield return new WaitForSeconds(2f);
 
-        isOver(isDead, enemyUnit, true);
+        isOver(isDead, true);
 
         
         
@@ -133,31 +131,21 @@ public class battleSystem : MonoBehaviour
     IEnumerator leechAttack()
     {
         state = battleState.ENEMY_TURN;
-
-        int leechdmg = playerUnit.unitDmg - 10;
-
+            
         
+        int leech = enemyUnit.takeDmg(playerUnit.unitDmg - 5);
         if (playerUnit.currentHp >= playerUnit.maxHp)
         {
             playerUnit.currentHp = playerUnit.maxHp;
         }
-        if (enemyUnit.isBlocking == true && leechdmg <= enemyUnit.block)
-        {
-            
-        }
-        else
-        {
-           playerUnit.currentHp += (leechdmg)/2; 
-        }
-        
-        
-        bool isDead = enemyUnit.takeDmg(leechdmg);
+        playerUnit.currentHp += (leech)/2; 
+        bool isDead = enemyUnit.isDead();
         enemyHud.setHp(enemyUnit);
         playerHud.setHp(playerUnit);
 
         yield return new WaitForSeconds(2f);
 
-        isOver(isDead, enemyUnit, true);
+        isOver(isDead, true);
         
         
     }
@@ -171,7 +159,7 @@ public class battleSystem : MonoBehaviour
 
         yield return new WaitForSeconds(2f);
 
-        isOver(isDead, enemyUnit, true);
+        isOver(isDead, true);
         
         
     }
@@ -187,7 +175,7 @@ public class battleSystem : MonoBehaviour
         playerHud.setHp(playerUnit);
         yield return new WaitForSeconds(2f);
 
-        isOver(isDead, playerUnit, false);
+        isOver(isDead, false);
 
         
     }
@@ -200,7 +188,8 @@ public class battleSystem : MonoBehaviour
             if (randNum < 7)
             {
                 combatLog.text = enemyUnit.unitName + " Used Slash";
-                return playerUnit.takeDmg(enemyUnit.unitDmg);
+                playerUnit.takeDmg(enemyUnit.unitDmg);
+                return playerUnit.isDead();
                 
             }
             else if (randNum > 7)
@@ -219,7 +208,9 @@ public class battleSystem : MonoBehaviour
             if (randNum <= 3)
             {
                 combatLog.text = enemyUnit.unitName + " Used Slash";
-                return playerUnit.takeDmg(enemyUnit.unitDmg);
+                playerUnit.takeDmg(enemyUnit.unitDmg);
+                return playerUnit.isDead();
+
             }
             else if (randNum > 3 && randNum <= 5)
             {
@@ -228,10 +219,12 @@ public class battleSystem : MonoBehaviour
                 enemyUnit.currentAp -= 1;
                 return false;
             }
-            else if (randNum > 5) {
+            else if (randNum > 5)
+            {
                 combatLog.text = enemyUnit.unitName + " Used Holy light";
                 enemyUnit.currentAp -= 2;
-                return playerUnit.takeDmg(enemyUnit.unitDmg + 10);
+                playerUnit.takeDmg(enemyUnit.unitDmg + 10);
+                return playerUnit.isDead();
             }
             
         }
@@ -248,20 +241,29 @@ public class battleSystem : MonoBehaviour
         if (state == battleState.WON)
         {
             combatLog.text = "You Won!";
+
+            
             Destroy(enemyUnit);
-            Start();
+            StartCoroutine(restart());
             
         }
         else if (state == battleState.LOST)
         {
             combatLog.text = "You Lost.";
 
+            StartCoroutine(restart());
         }
 
 
     }
+    IEnumerator restart()
+    {
+        yield return new WaitForSeconds(2f);
+        
+        Start();
+    }
 
-    public void isOver(bool isDead, Unit unit, bool isEnemy)
+    public void isOver(bool isDead, bool isEnemy)
     {
         if (isEnemy == true)
         {
@@ -296,7 +298,7 @@ public class battleSystem : MonoBehaviour
             }
         }
 
-        
+
     }
 
     // Update is called once per frame

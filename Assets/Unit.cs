@@ -13,18 +13,24 @@ public class Unit : MonoBehaviour
     public int maxAp;
     public int currentAp;
 
-    public bool takeDmg(int dmg)
+    public int takeDmg(int dmg)
     {
         if (isBlocking == true)
         {
             currentHp -= dmg - block;
+
+            return dmg - block;
         }
         else
         {
             currentHp -= dmg;
+            return dmg;
         }
-        
 
+    }
+
+    public bool isDead()
+    {
         if (currentHp <= 0)
         {
             currentHp = 0;
@@ -35,6 +41,8 @@ public class Unit : MonoBehaviour
             return false;
         }
     }
+    
+    
 
     
 }
