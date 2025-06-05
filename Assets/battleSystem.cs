@@ -4,6 +4,7 @@ using System.Numerics;
 using Unity.Collections;
 using Unity.Mathematics;
 using Unity.VisualScripting;
+using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,7 +14,7 @@ public enum battleState { START, PLAYER_TURN, ENEMY_TURN, WON, LOST }
 public class battleSystem : MonoBehaviour
 {
 
-    public GameObject playerPrefab;
+    public GameObject player;
 
     public GameObject enemies;
 
@@ -35,7 +36,7 @@ public class battleSystem : MonoBehaviour
 
     public AnimationController playerAnim;
 
-    public AnimationController enemyAcolyte;
+    public AnimationController enemyAnim;
 
 
 
@@ -49,8 +50,8 @@ public class battleSystem : MonoBehaviour
 
     IEnumerator setUpBattle()
     {
-
-        playerUnit = playerPrefab.GetComponent<Unit>();
+        GameObject playerGO = Instantiate(player, battleStation.GetChild(0).transform);
+        playerUnit = playerGO.GetComponent<Unit>();
 
         if (playerUnit.currentHp == 0)
         {
@@ -61,11 +62,18 @@ public class battleSystem : MonoBehaviour
         GetChild(UnityEngine.Random.Range(0, 1)).gameObject,
         battleStation.GetChild(1).transform);
         enemyUnit = enemy.GetComponent<Unit>();
+        enemyUnit._tag = UnitTag.ENEMY;
+
+        enemyAnim = enemyUnit.GetComponentInParent<AnimationController>();
+        playerAnim = playerUnit.GetComponent<AnimationController>();
 
         playerHud.setHuD(playerUnit);
         enemyHud.setHuD(enemyUnit);
 
         combatLog.text = "An enemy " + enemyUnit.unitName + " appears";
+
+        enemyAnim.target = playerUnit;
+        playerAnim.target = enemyUnit;
 
         yield return new WaitForSeconds(2f);
 
@@ -88,16 +96,15 @@ public class battleSystem : MonoBehaviour
     {
         state = battleState.ENEMY_TURN;
 
-        playerAnim.target = enemyUnit;
         playerAnim.dmg = playerUnit.unitDmg;
         playerAnim.PlayAction("Attack");
-        bool isDead = enemyUnit.isDead();
+        
         
         
 
         yield return new WaitForSeconds(2f);
 
-        isOver(isDead, true);
+        isOver(enemyUnit);
 
 
 
@@ -136,7 +143,6 @@ public class battleSystem : MonoBehaviour
     IEnumerator leechAttack()
     {
         state = battleState.ENEMY_TURN;
-        playerAnim.target = enemyUnit;
         playerAnim.dmg = playerUnit.unitDmg - 5;
         playerAnim.PlayAction("Attack2");
         int leech = playerUnit.unitDmg - 5;
@@ -145,12 +151,12 @@ public class battleSystem : MonoBehaviour
             playerUnit.currentHp = playerUnit.maxHp;
         }
         playerUnit.currentHp += leech / 2;
-        bool isDead = enemyUnit.isDead();
+        
         
 
         yield return new WaitForSeconds(2f);
 
-        isOver(isDead, true);
+        isOver(enemyUnit);
 
 
     }
@@ -160,11 +166,9 @@ public class battleSystem : MonoBehaviour
         state = battleState.ENEMY_TURN;
         playerUnit.isBlocking = true;
 
-        bool isDead = false;
-
         yield return new WaitForSeconds(2f);
 
-        isOver(isDead, true);
+        isOver(enemyUnit);
 
 
     }
@@ -175,12 +179,12 @@ public class battleSystem : MonoBehaviour
         enemyUnit.isBlocking = false;
 
 
-
+        
         bool isDead = EnemyActionOptions();
 
         yield return new WaitForSeconds(2f);
 
-        isOver(isDead, false);
+        isOver(playerUnit);
 
 
     }
@@ -193,7 +197,9 @@ public class battleSystem : MonoBehaviour
             if (randNum < 7)
             {
                 combatLog.text = enemyUnit.unitName + " Used Slash";
-                playerUnit.takeDmg(enemyUnit.unitDmg);
+                enemyAnim.dmg = enemyUnit.unitDmg;
+                enemyAnim.PlayAction("Attack");
+                
 
 
                 return playerUnit.isDead();
@@ -215,7 +221,9 @@ public class battleSystem : MonoBehaviour
             if (randNum <= 3)
             {
                 combatLog.text = enemyUnit.unitName + " Used Slash";
-                playerUnit.takeDmg(enemyUnit.unitDmg);
+                enemyAnim.target = playerUnit;
+                enemyAnim.dmg = enemyUnit.unitDmg;
+                enemyAnim.PlayAction("Attack");
 
                 return playerUnit.isDead();
 
@@ -231,7 +239,8 @@ public class battleSystem : MonoBehaviour
             {
                 combatLog.text = enemyUnit.unitName + " Used Holy light";
                 enemyUnit.currentAp -= 2;
-                playerUnit.takeDmg(enemyUnit.unitDmg + 10);
+                enemyAnim.dmg = enemyUnit.unitDmg + 10;
+                enemyAnim.PlayAction("Attack2");
                 return playerUnit.isDead();
             }
 
@@ -250,7 +259,7 @@ public class battleSystem : MonoBehaviour
         {
             combatLog.text = "You Won!";
 
-            Destroy(enemyUnit.GetComponent<GameObject>());
+            
             StartCoroutine(restart());
 
         }
@@ -270,11 +279,13 @@ public class battleSystem : MonoBehaviour
         Start();
     }
 
-    public void isOver(bool isDead, bool isEnemy)
+    public void isOver(Unit unit)
     {
-        if (isEnemy == true)
+        
+        if (unit._tag == UnitTag.ENEMY)
         {
-            if (isDead)
+
+            if (unit.state == UnitState.DEAD)
             {
                 state = battleState.WON;
                 endBattle();
@@ -287,7 +298,7 @@ public class battleSystem : MonoBehaviour
         }
         else
         {
-            if (isDead)
+            if (unit.state == UnitState.DEAD)
             {
                 state = battleState.LOST;
                 endBattle();

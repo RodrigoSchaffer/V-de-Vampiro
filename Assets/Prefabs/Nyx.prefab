@@ -56,6 +56,8 @@ MonoBehaviour:
   maxAp: 0
   currentAp: 0
   tookDmg: 0
+  state: 0
+  _tag: 0
 --- !u!95 &5624626692502827417
 Animator:
   serializedVersion: 7
@@ -142,6 +144,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 4681520867232868680}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4d468bc27abe30d49ac0b9b6ee780628, type: 3}
+  m_Script: {fileID: 11500000, guid: be740998ffebf1b4db14b55243885f72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animator: {fileID: 5624626692502827417}
+  target: {fileID: 0}
+  dmg: 0

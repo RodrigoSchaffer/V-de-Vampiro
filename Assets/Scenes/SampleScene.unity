@@ -1730,14 +1730,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerPrefab: {fileID: 4681520867232868680, guid: 347ff5dbf0ab4b64b82b0862140a170d, type: 3}
   enemies: {fileID: 1093949756}
-  pAnim: {fileID: 5624626692383381497}
-  enemyAnim: {fileID: 505817323}
+  playerUnit: {fileID: 0}
+  enemyUnit: {fileID: 0}
   battleStation: {fileID: 1023198093}
   state: 0
   turnCount: 0
   playerHud: {fileID: 2022555910}
   enemyHud: {fileID: 1692537904}
   combatLog: {fileID: 1374734934}
+  playerAnim: {fileID: 5624626692383381498}
+  enemyAnim: {fileID: 0}
 --- !u!4 &1288519496
 Transform:
   m_ObjectHideFlags: 0
@@ -3260,18 +3262,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &636164682340965428
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4681520867878948648}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4d468bc27abe30d49ac0b9b6ee780628, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1212225981673150464
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3289,9 +3279,12 @@ MonoBehaviour:
   block: 10
   isBlocking: 0
   maxHp: 150
-  currentHp: 77
+  currentHp: 150
   maxAp: 0
   currentAp: 0
+  tookDmg: 0
+  state: 0
+  _tag: 0
 --- !u!4 &2055691835438375447
 Transform:
   m_ObjectHideFlags: 0
@@ -3411,6 +3404,7 @@ GameObject:
   - component: {fileID: 9167918827686082063}
   - component: {fileID: 2757302842621677893}
   - component: {fileID: 505817323}
+  - component: {fileID: 9167918827686082064}
   m_Layer: 0
   m_Name: Acolyte
   m_TagString: Untagged
@@ -3445,7 +3439,7 @@ GameObject:
   - component: {fileID: 1212225981673150464}
   - component: {fileID: 5624626692383381497}
   - component: {fileID: 76520563017632488}
-  - component: {fileID: 636164682340965428}
+  - component: {fileID: 5624626692383381498}
   m_Layer: 0
   m_Name: Nyx
   m_TagString: Untagged
@@ -3532,6 +3526,21 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &5624626692383381498
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4681520867878948648}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be740998ffebf1b4db14b55243885f72, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 5624626692383381497}
+  target: {fileID: 0}
+  dmg: 0
 --- !u!114 &8300892228286433094
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3552,6 +3561,9 @@ MonoBehaviour:
   currentHp: 100
   maxAp: 0
   currentAp: 0
+  tookDmg: 0
+  state: 0
+  _tag: 0
 --- !u!114 &9167918827686082063
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3572,6 +3584,24 @@ MonoBehaviour:
   currentHp: 175
   maxAp: 2
   currentAp: 0
+  tookDmg: 0
+  state: 0
+  _tag: 0
+--- !u!114 &9167918827686082064
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3570571696142098200}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be740998ffebf1b4db14b55243885f72, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 505817323}
+  target: {fileID: 0}
+  dmg: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
