@@ -2,8 +2,8 @@ using UnityEditor.UI;
 using UnityEngine;
 
 
-public enum UnitState { ALIVE, DEAD, POISONED, MOONLIT, SUNBURNT }
-public enum UnitTag{ PLAYER, ENEMY, BOSS}
+public enum UnitState { ALIVE, DEAD}
+public enum UnitTag{ PLAYER, ENEMY}
 public class Unit : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -28,12 +28,12 @@ public class Unit : MonoBehaviour
         if (isBlocking == true)
         {
             int damage = dmg - block;
-            tookDmg = true;
+            
             return loseHealth(damage);
         }
         else
         {
-            tookDmg = true;
+            
             return loseHealth(dmg);
         }
 
@@ -45,7 +45,7 @@ public class Unit : MonoBehaviour
 
         currentHp -= dmg;
 
-        tookDmg = false;
+        tookDmg = true;
         return dmg;
 
 
@@ -74,6 +74,11 @@ public class Unit : MonoBehaviour
         else
         {
             state = UnitState.ALIVE;
+        }
+
+        if (currentHp > maxHp)
+        {
+            currentHp = maxHp;
         }  
     }
 

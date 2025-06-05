@@ -3,7 +3,7 @@ using UnityEngine;
 public class AnimationController : MonoBehaviour
 {
     public Animator animator;
-    private bool isPlayingAction = false;
+    public bool isPlayingAction = false;
     private string currentState = "";
 
     public Unit target;
@@ -50,6 +50,8 @@ public class AnimationController : MonoBehaviour
 
         return 0;
     }
+
+    
 
 }
 
