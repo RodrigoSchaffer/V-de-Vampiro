@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdd5fef68549c4a4faed88ff1852d524, type: 3}
   m_Name: Poke
   m_EditorClassIdentifier: 
-  attackName: 
-  damage: 0
+  attackName: Poke
+  damage: 25
   apCost: 0
-  description: 
+  description: Hit the target with a staff
   type: 0
-  _attackAnim: 
+  _attackAnim: Attack

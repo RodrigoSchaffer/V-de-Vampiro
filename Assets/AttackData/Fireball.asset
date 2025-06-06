@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdd5fef68549c4a4faed88ff1852d524, type: 3}
   m_Name: Fireball
   m_EditorClassIdentifier: 
-  attackName: 
-  damage: 0
-  apCost: 0
-  description: 
-  type: 0
-  _attackAnim: 
+  attackName: Sacred Fire
+  damage: 40
+  apCost: 2
+  description: Fire that deals bonus dmg to vampires
+  type: 1
+  _attackAnim: Attack2

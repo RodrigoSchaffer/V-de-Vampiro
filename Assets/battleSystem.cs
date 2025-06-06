@@ -1,13 +1,6 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Numerics;
-using Unity.Collections;
-using Unity.Mathematics;
-using Unity.VisualScripting;
-using UnityEditor.Animations;
 using UnityEngine;
-using UnityEngine.TextCore;
 using UnityEngine.UI;
 
 
@@ -27,7 +20,7 @@ public class battleSystem : MonoBehaviour
     public Transform battleStation;
 
     public float moveSpeed = 8f;
-    public UnityEngine.Vector3 originalPosition;
+    public Vector3 originalPosition;
     public float approachDistance = 1.5f;
     public float waitSeconds = 3.5f;
     
@@ -38,6 +31,7 @@ public class battleSystem : MonoBehaviour
     
 
     public int turnCount;
+    public int winCount;
 
     public BattleHud playerHud;
     public BattleHud enemyHud;
@@ -65,8 +59,9 @@ public class battleSystem : MonoBehaviour
     {
         if (playerGO == null)
         {      
-        playerGO = Instantiate(player, battleStation.GetChild(0).transform);
-        playerUnit = playerGO.GetComponent<Unit>();
+            playerGO = Instantiate(player, battleStation.GetChild(0).transform);
+            playerUnit = playerGO.GetComponent<Unit>();
+            winCount = 0;
         }
 
         if (playerUnit.currentHp == 0)
@@ -74,7 +69,7 @@ public class battleSystem : MonoBehaviour
             playerUnit.currentHp = playerUnit.maxHp;
         }
 
-        enemy = Instantiate(enemies[UnityEngine.Random.Range(0, 2)],
+        enemy = Instantiate(enemies[Random.Range(0, 2)],
         battleStation.GetChild(1).transform);
         enemyUnit = enemy.GetComponent<Unit>();
         enemyUnit._tag = UnitTag.ENEMY;
@@ -106,7 +101,7 @@ public class battleSystem : MonoBehaviour
             originalPosition = battleStation.GetChild(0).position;
             Transform target = battleStation.GetChild(1);
 
-            UnityEngine.Vector3 direction = (target.position - playerUnit.transform.position).normalized;
+            Vector3 direction = (target.position - playerUnit.transform.position).normalized;
 
             yield return StartCoroutine(MoveToPosition(target.position - direction * approachDistance, playerUnit));
 
@@ -122,7 +117,7 @@ public class battleSystem : MonoBehaviour
             originalPosition = battleStation.GetChild(1).position;
             Transform target = battleStation.GetChild(0);
 
-            UnityEngine.Vector3 direction = (target.position - enemyUnit.transform.position).normalized;
+            Vector3 direction = (target.position - enemyUnit.transform.position).normalized;
 
 
             
@@ -143,9 +138,9 @@ public class battleSystem : MonoBehaviour
         {
 
 
-            while (UnityEngine.Vector3.Distance(playerUnit.transform.position, destination) > 0.05f)
+            while (Vector3.Distance(playerUnit.transform.position, destination) > 0.05f)
             {
-                playerUnit.transform.position = UnityEngine.Vector3.MoveTowards(playerUnit.transform.position, destination, moveSpeed * Time.deltaTime);
+                playerUnit.transform.position = Vector3.MoveTowards(playerUnit.transform.position, destination, moveSpeed * Time.deltaTime);
                 yield return new WaitUntil(() => playerAnim.isPlayingAction == false);
             }
 
@@ -153,9 +148,9 @@ public class battleSystem : MonoBehaviour
         }
         else
         {
-            while (UnityEngine.Vector3.Distance(enemyUnit.transform.position, destination) > 0.05f)
+            while (Vector3.Distance(enemyUnit.transform.position, destination) > 0.05f)
             {
-                enemyUnit.transform.position = UnityEngine.Vector3.MoveTowards(enemyUnit.transform.position, destination, moveSpeed * Time.deltaTime);
+                enemyUnit.transform.position = Vector3.MoveTowards(enemyUnit.transform.position, destination, moveSpeed * Time.deltaTime);
                 yield return new WaitUntil(() => enemyAnim.isPlayingAction == false);
             }
 
@@ -267,7 +262,7 @@ public class battleSystem : MonoBehaviour
     {
         if (enemyUnit.currentAp <= 1)
         {
-            int randNum = UnityEngine.Random.Range(0, 10);
+            int randNum = Random.Range(0, 10);
             if (randNum <= 7)
             {
                 StartCoroutine(MoveToTargetAndBack(enemyUnit, 0));
@@ -287,7 +282,7 @@ public class battleSystem : MonoBehaviour
         }
         else if (enemyUnit.currentAp > 1)
         {
-            int randNum = UnityEngine.Random.Range(0, 10);
+            int randNum = Random.Range(0, 10);
             if (randNum <= 3)
             {
                 StartCoroutine(MoveToTargetAndBack(enemyUnit, 0));
@@ -323,6 +318,7 @@ public class battleSystem : MonoBehaviour
         if (state == battleState.WON)
         {
             combatLog.text = "You Won!";
+            winCount++;
             yield return new WaitForSeconds(3f);
             Destroy(enemy);
             Start();
@@ -395,7 +391,6 @@ public class battleSystem : MonoBehaviour
         
     }
 
-    // Update is called once per frame
     void Update()
     {
         gotHit(playerUnit);

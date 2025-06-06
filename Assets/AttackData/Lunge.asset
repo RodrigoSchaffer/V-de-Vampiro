@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdd5fef68549c4a4faed88ff1852d524, type: 3}
   m_Name: Lunge
   m_EditorClassIdentifier: 
-  attackName: 
-  damage: 0
+  attackName: Lunge
+  damage: 35
   apCost: 0
-  description: 
-  type: 0
-  _attackAnim: 
+  description: 'Hit the target with a rapier '
+  type: 2
+  _attackAnim: Attack

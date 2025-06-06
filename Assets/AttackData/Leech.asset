@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdd5fef68549c4a4faed88ff1852d524, type: 3}
   m_Name: Leech
   m_EditorClassIdentifier: 
-  attackName: 
-  damage: 0
-  apCost: 0
-  description: 
-  type: 0
-  _attackAnim: 
+  attackName: Leech
+  damage: 50
+  apCost: 2
+  description: Hit enemies and heal for half the damage
+  type: 2
+  _attackAnim: Attack2

@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdd5fef68549c4a4faed88ff1852d524, type: 3}
   m_Name: Rumble Impact
   m_EditorClassIdentifier: 
-  attackName: 
-  damage: 0
-  apCost: 0
-  description: 
+  attackName: Rumble Impact
+  damage: 45
+  apCost: 2
+  description: Leap and hit the target by smashing the ground
   type: 0
-  _attackAnim: 
+  _attackAnim: Attack2
