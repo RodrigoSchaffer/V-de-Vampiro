@@ -29,6 +29,7 @@ public class battleSystem : MonoBehaviour
     public float moveSpeed = 8f;
     public UnityEngine.Vector3 originalPosition;
     public float approachDistance = 1.5f;
+    public float waitSeconds = 3.5f;
     
 
     public battleState state;
@@ -57,8 +58,11 @@ public class battleSystem : MonoBehaviour
 
     IEnumerator setUpBattle()
     {
+        if (playerUnit == null)
+        {      
         GameObject playerGO = Instantiate(player, battleStation.GetChild(0).transform);
         playerUnit = playerGO.GetComponent<Unit>();
+        }
 
         if (playerUnit.currentHp == 0)
         {
@@ -90,7 +94,7 @@ public class battleSystem : MonoBehaviour
 
     }
 
-    private IEnumerator MoveToTargetAndBack(Unit unit, String action)
+    private IEnumerator MoveToTargetAndBack(Unit unit, int attackIndex)
     {
         if (unit._tag == UnitTag.PLAYER) {
 
@@ -99,10 +103,10 @@ public class battleSystem : MonoBehaviour
 
             UnityEngine.Vector3 direction = (target.position - playerUnit.transform.position).normalized;
 
-            yield return StartCoroutine(MoveToPosition(target.position - direction * approachDistance, playerUnit)); 
+            yield return StartCoroutine(MoveToPosition(target.position - direction * approachDistance, playerUnit));
 
-          
-            playerAnim.PlayAction(action);
+
+            combatLog.text = unit.UseAttack(unit.attacks[attackIndex], playerAnim);
 
             yield return new WaitForSeconds(0.5f); 
 
@@ -120,7 +124,7 @@ public class battleSystem : MonoBehaviour
             yield return StartCoroutine(MoveToPosition(target.position - direction * approachDistance, enemyUnit));
             
             
-            enemyAnim.PlayAction(action);
+            combatLog.text = unit.UseAttack(unit.attacks[attackIndex], enemyAnim);
             
 
             
@@ -166,14 +170,11 @@ public class battleSystem : MonoBehaviour
     IEnumerator playerAttack()
     {
         state = battleState.ENEMY_TURN;
-
-        combatLog.text = "Nyx used Attack";
-        playerAnim.dmg = playerUnit.unitDmg;
-        StartCoroutine(MoveToTargetAndBack(playerUnit, "Attack"));
+        StartCoroutine(MoveToTargetAndBack(playerUnit, 0));
         
         
 
-        yield return new WaitForSeconds(3.5f);
+        yield return new WaitForSeconds(3f);
 
         isOver(enemyUnit);
 
@@ -214,11 +215,8 @@ public class battleSystem : MonoBehaviour
     IEnumerator leechAttack()
     {
         state = battleState.ENEMY_TURN;
-        combatLog.text = "Nyx used Leech";
-        playerAnim.dmg = playerUnit.unitDmg - 5;
-        StartCoroutine(MoveToTargetAndBack(playerUnit, "Attack2"));
-        int leech = playerUnit.unitDmg - 5;
-        playerUnit.currentHp += leech / 2;
+        StartCoroutine(MoveToTargetAndBack(playerUnit, 1));
+        
         
         
 
@@ -249,38 +247,33 @@ public class battleSystem : MonoBehaviour
 
 
         
-        bool isDead = EnemyActionOptions();
+        EnemyActionOptions();
 
-        yield return new WaitForSeconds(3.5f);
+        yield return new WaitForSeconds(waitSeconds);
+        waitSeconds = 3.5f;
 
         isOver(playerUnit);
 
 
     }
 
-    public bool EnemyActionOptions()
+    public void EnemyActionOptions()
     {
         if (enemyUnit.currentAp <= 1)
         {
             int randNum = UnityEngine.Random.Range(0, 10);
-            if (randNum < 7)
+            if (randNum <= 7)
             {
-                combatLog.text = enemyUnit.unitName + " Used Slash";
-                enemyAnim.dmg = enemyUnit.unitDmg;
-                StartCoroutine(MoveToTargetAndBack(enemyUnit, "Attack"));
-                
-                
+                StartCoroutine(MoveToTargetAndBack(enemyUnit, 0));
 
-
-                return playerUnit.isDead();
 
             }
             else if (randNum > 7)
             {
                 combatLog.text = enemyUnit.unitName + " Used Block";
                 enemyUnit.isBlocking = true;
-                enemyUnit.currentAp -= 1;
-                return false;
+                waitSeconds = 2f;
+                
             }
 
 
@@ -290,32 +283,27 @@ public class battleSystem : MonoBehaviour
             int randNum = UnityEngine.Random.Range(0, 10);
             if (randNum <= 3)
             {
-                combatLog.text = enemyUnit.unitName + " Used Slash";
-                enemyAnim.dmg = enemyUnit.unitDmg;
-                StartCoroutine(MoveToTargetAndBack(enemyUnit, "Attack"));
+                StartCoroutine(MoveToTargetAndBack(enemyUnit, 0));
 
-                return playerUnit.isDead();
+
 
             }
             else if (randNum > 3 && randNum <= 5)
             {
                 combatLog.text = enemyUnit.unitName + " Used Block";
                 enemyUnit.isBlocking = true;
-                enemyUnit.currentAp -= 1;
-                return false;
+                waitSeconds = 2f;
+                
             }
             else if (randNum > 5)
             {
-                combatLog.text = enemyUnit.unitName + " Used Holy light";
-                enemyUnit.currentAp -= 2;
-                enemyAnim.dmg = enemyUnit.unitDmg + 10;
-                StartCoroutine(MoveToTargetAndBack(enemyUnit, "Attack2"));
-                return playerUnit.isDead();
+                StartCoroutine(MoveToTargetAndBack(enemyUnit, 1));
+
             }
 
         }
 
-        return false;
+        
 
 
     }
@@ -361,6 +349,7 @@ public class battleSystem : MonoBehaviour
             }
             else
             {
+                playerUnit.currentAp++;
                 StartCoroutine(enemyTurn());
             }
         }
@@ -376,10 +365,8 @@ public class battleSystem : MonoBehaviour
             {
                 turnCount++;
                 state = battleState.PLAYER_TURN;
-                if (enemyUnit.currentAp < 2)
-                {
-                    enemyUnit.currentAp++;
-                }
+                enemyUnit.currentAp++;
+              
                 playerTurn();
             }
         }

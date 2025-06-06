@@ -1,12 +1,14 @@
+using System.Collections.Generic;
 using UnityEditor.UI;
 using UnityEngine;
+using UnityEngine.UI;
 
 
 public enum UnitState { ALIVE, DEAD}
-public enum UnitTag{ PLAYER, ENEMY}
+public enum UnitTag { PLAYER, ENEMY }
 public class Unit : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    
     public string unitName;
     public int unitDmg;
     public int block;
@@ -21,6 +23,9 @@ public class Unit : MonoBehaviour
 
     public UnitTag _tag;
 
+    
+    public List<AttackData> attacks;
+
 
     public int takeDmg(int dmg)
     {
@@ -28,12 +33,12 @@ public class Unit : MonoBehaviour
         if (isBlocking == true)
         {
             int damage = dmg - block;
-            
+
             return loseHealth(damage);
         }
         else
         {
-            
+
             return loseHealth(dmg);
         }
 
@@ -51,17 +56,22 @@ public class Unit : MonoBehaviour
 
     }
 
-    public bool isDead()
+    public void vampiricHeal(int index)
     {
-        if (currentHp <= 0)
+        currentHp += attacks[index].damage / 2;
+    }
+
+    public string UseAttack(AttackData attack, AnimationController ac)
+    {
+        if (currentAp < attack.apCost)
         {
-            currentHp = 0;
-            return true;
+            return $"{unitName} does not have enough AP to use {attack.attackName}.";
         }
-        else
-        {
-            return false;
-        }
+
+        currentAp -= attack.apCost;
+        ac.dmg = attack.damage;
+        ac.PlayAction(attack._attackAnim);
+        return $"{unitName} used {attack.attackName}.";
     }
 
     void Update()
@@ -79,10 +89,18 @@ public class Unit : MonoBehaviour
         if (currentHp > maxHp)
         {
             currentHp = maxHp;
-        }  
+        }
+
+        if (currentAp > maxAp)
+        {
+            currentAp = maxAp;
+        }
+        else if (currentAp < 0)
+        {
+            currentAp = 0;
+        }
+
+
     }
-
-
-
 
 }
