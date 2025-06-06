@@ -33,6 +33,8 @@ public class battleSystem : MonoBehaviour
     
 
     public battleState state;
+    public GameObject playerGO = null;
+    public GameObject enemy;
     
 
     public int turnCount;
@@ -46,6 +48,9 @@ public class battleSystem : MonoBehaviour
 
     public AnimationController enemyAnim;
 
+    public Button strongAttack;
+    public Button blockButton;
+
 
 
 
@@ -58,9 +63,9 @@ public class battleSystem : MonoBehaviour
 
     IEnumerator setUpBattle()
     {
-        if (playerUnit == null)
+        if (playerGO == null)
         {      
-        GameObject playerGO = Instantiate(player, battleStation.GetChild(0).transform);
+        playerGO = Instantiate(player, battleStation.GetChild(0).transform);
         playerUnit = playerGO.GetComponent<Unit>();
         }
 
@@ -69,7 +74,7 @@ public class battleSystem : MonoBehaviour
             playerUnit.currentHp = playerUnit.maxHp;
         }
 
-        GameObject enemy = Instantiate(enemies[UnityEngine.Random.Range(0, 2)],
+        enemy = Instantiate(enemies[UnityEngine.Random.Range(0, 2)],
         battleStation.GetChild(1).transform);
         enemyUnit = enemy.GetComponent<Unit>();
         enemyUnit._tag = UnitTag.ENEMY;
@@ -232,6 +237,7 @@ public class battleSystem : MonoBehaviour
         state = battleState.ENEMY_TURN;
         combatLog.text = "Nyx used Block";
         playerUnit.isBlocking = true;
+        playerUnit.currentAp--;
 
         yield return new WaitForSeconds(2f);
 
@@ -272,6 +278,7 @@ public class battleSystem : MonoBehaviour
             {
                 combatLog.text = enemyUnit.unitName + " Used Block";
                 enemyUnit.isBlocking = true;
+                enemyUnit.currentAp--;
                 waitSeconds = 2f;
                 
             }
@@ -292,6 +299,7 @@ public class battleSystem : MonoBehaviour
             {
                 combatLog.text = enemyUnit.unitName + " Used Block";
                 enemyUnit.isBlocking = true;
+                enemyUnit.currentAp--;
                 waitSeconds = 2f;
                 
             }
@@ -310,29 +318,32 @@ public class battleSystem : MonoBehaviour
 
 
 
-    public void endBattle()
+    public IEnumerator EndBattle()
     {
         if (state == battleState.WON)
         {
             combatLog.text = "You Won!";
+            yield return new WaitForSeconds(3f);
+            Destroy(enemy);
+            Start();
             
-            
+
+
 
         }
         else if (state == battleState.LOST)
         {
             combatLog.text = "You Lost.";
+            yield return new WaitForSeconds(3f);
+            Destroy(playerGO);
+            playerGO = null;
+            Destroy(enemy);
+            Start();
 
-            
+
         }
 
 
-    }
-    IEnumerator restart()
-    {
-        yield return new WaitForSeconds(2f);
-
-        Start();
     }
 
     public void isOver(Unit unit)
@@ -344,7 +355,7 @@ public class battleSystem : MonoBehaviour
             if (unit.state == UnitState.DEAD)
             {
                 state = battleState.WON;
-                endBattle();
+                StartCoroutine(EndBattle());
 
             }
             else
@@ -358,7 +369,7 @@ public class battleSystem : MonoBehaviour
             if (unit.state == UnitState.DEAD)
             {
                 state = battleState.LOST;
-                endBattle();
+                StartCoroutine(EndBattle());
 
             }
             else
@@ -392,6 +403,27 @@ public class battleSystem : MonoBehaviour
 
         enemyHud.setHp(enemyUnit);
         playerHud.setHp(playerUnit);
+
+        if (playerUnit.currentAp < 2)
+        {
+            strongAttack.interactable = false;
+
+        }
+        else
+        {
+            strongAttack.interactable = true;
+            
+        }
+
+        if (playerUnit.currentAp < 1)
+        {
+            blockButton.interactable = false;
+        }
+        else
+        {
+            blockButton.interactable = true;
+        }
+        
       
 
     }
