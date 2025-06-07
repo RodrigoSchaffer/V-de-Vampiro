@@ -6,9 +6,6 @@ public class AnimationController : MonoBehaviour
     public bool isPlayingAction = false;
     private string currentState = "";
 
-    public Unit target;
-    public int dmg;
-
 
 
 

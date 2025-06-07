@@ -1,12 +1,16 @@
+using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 
 
 public enum UnitState { ALIVE, DEAD}
 public enum UnitTag { PLAYER, ENEMY }
+
+public enum UnitType {Vampire, Sacred, Giant, Monster}
 public class Unit : MonoBehaviour
 {
-    
+
     public string unitName;
     public int unitDmg;
     public int block;
@@ -21,7 +25,9 @@ public class Unit : MonoBehaviour
 
     public UnitTag _tag;
 
-    
+    public UnitType _unitType;
+
+
     public List<AttackData> attacks;
 
     private AttackData chosenAttack;
@@ -31,30 +37,58 @@ public class Unit : MonoBehaviour
 
     public void dealDmg()
     {
-        if (target != null) {
+        int damage = 0;
+        if (target != null)
+        {
 
             if (isBlocking == true)
             {
-                int damage = chosenAttack.damage - target.block;
-                if (damage == 0) {
-                    damage = 0;                    
+                damage = chosenAttack.damage - target.block;
+                if (damage == 0)
+                {
+                    damage = 0;
                 }
 
-                target.currentHp -= damage;
-                tookDmg = true;
+                
             }
             else
             {
-                target.currentHp -= chosenAttack.damage;
-                tookDmg = true;
+                damage = chosenAttack.damage;
+                if (damage == 0)
+                {
+                    damage = 0;
+                }
+                
             }
+
+
+            switch (chosenAttack.type)
+            {
+                case AttackType.Physical:
+                    target.currentHp -= damage;
+                    target.tookDmg = true;
+                    break;
+                case AttackType.Magical:
+                    target.currentHp -= damage;
+                    target.tookDmg = true;
+                    break;
+                case AttackType.Vampiric:
+                    target.currentHp -= damage;
+                    target.tookDmg = true;
+                    Heal(damage);
+                    break;
+            }
+        }
+        else
+        {
+            Debug.Log("No Target Assigned");
         }
 
     }
 
-    public void vampiricHeal(int index)
+    public void Heal(int damage)
     {
-        currentHp += attacks[index].damage / 2;
+        currentHp += damage / 2;
     }
 
     public string UseAttack(AttackData attack, AnimationController ac)

@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public enum battleState { START, PLAYER_TURN, ENEMY_TURN, WON, LOST }
 
+public enum dayTime{Day, Night}
+
 public class battleSystem : MonoBehaviour
 {
 
@@ -23,12 +25,12 @@ public class battleSystem : MonoBehaviour
     public Vector3 originalPosition;
     public float approachDistance = 1.5f;
     public float waitSeconds = 3.5f;
-    
+
 
     public battleState state;
     public GameObject playerGO = null;
     public GameObject enemy;
-    
+
 
     public int turnCount;
     public int winCount;
@@ -58,15 +60,10 @@ public class battleSystem : MonoBehaviour
     IEnumerator setUpBattle()
     {
         if (playerGO == null)
-        {      
+        {
             playerGO = Instantiate(player, battleStation.GetChild(0).transform);
             playerUnit = playerGO.GetComponent<Unit>();
             winCount = 0;
-        }
-
-        if (playerUnit.currentHp == 0)
-        {
-            playerUnit.currentHp = playerUnit.maxHp;
         }
 
         enemy = Instantiate(enemies[Random.Range(0, 3)],
@@ -96,7 +93,8 @@ public class battleSystem : MonoBehaviour
 
     private IEnumerator MoveToTargetAndBack(Unit unit, int attackIndex)
     {
-        if (unit._tag == UnitTag.PLAYER) {
+        if (unit._tag == UnitTag.PLAYER)
+        {
 
             originalPosition = battleStation.GetChild(0).position;
             Transform target = battleStation.GetChild(1);
@@ -108,26 +106,27 @@ public class battleSystem : MonoBehaviour
 
             combatLog.text = unit.UseAttack(unit.attacks[attackIndex], playerAnim);
 
-            yield return new WaitForSeconds(0.5f); 
+            yield return new WaitForSeconds(0.5f);
 
-            
+
             yield return StartCoroutine(MoveToPosition(originalPosition, playerUnit));
         }
-        else {
+        else
+        {
             originalPosition = battleStation.GetChild(1).position;
             Transform target = battleStation.GetChild(0);
 
             Vector3 direction = (target.position - enemyUnit.transform.position).normalized;
 
 
-            
-            yield return StartCoroutine(MoveToPosition(target.position - direction * approachDistance, enemyUnit));
-            
-            
-            combatLog.text = unit.UseAttack(unit.attacks[attackIndex], enemyAnim);
-            
 
-            
+            yield return StartCoroutine(MoveToPosition(target.position - direction * approachDistance, enemyUnit));
+
+
+            combatLog.text = unit.UseAttack(unit.attacks[attackIndex], enemyAnim);
+
+
+
             yield return StartCoroutine(MoveToPosition(originalPosition, enemyUnit));
         }
     }
@@ -144,7 +143,7 @@ public class battleSystem : MonoBehaviour
                 yield return new WaitUntil(() => playerAnim.isPlayingAction == false);
             }
 
-            playerUnit.transform.position = destination; 
+            playerUnit.transform.position = destination;
         }
         else
         {
@@ -156,7 +155,7 @@ public class battleSystem : MonoBehaviour
 
             enemyUnit.transform.position = destination;
         }
-        
+
     }
 
     void playerTurn()
@@ -171,8 +170,8 @@ public class battleSystem : MonoBehaviour
     {
         state = battleState.ENEMY_TURN;
         StartCoroutine(MoveToTargetAndBack(playerUnit, 0));
-        
-        
+
+
 
         yield return new WaitForSeconds(3f);
 
@@ -216,9 +215,9 @@ public class battleSystem : MonoBehaviour
     {
         state = battleState.ENEMY_TURN;
         StartCoroutine(MoveToTargetAndBack(playerUnit, 1));
-        
-        
-        
+
+
+
 
         yield return new WaitForSeconds(3.5f);
 
@@ -247,7 +246,7 @@ public class battleSystem : MonoBehaviour
         enemyUnit.isBlocking = false;
 
 
-        
+
         EnemyActionOptions();
 
         yield return new WaitForSeconds(waitSeconds);
@@ -275,7 +274,7 @@ public class battleSystem : MonoBehaviour
                 enemyUnit.isBlocking = true;
                 enemyUnit.currentAp--;
                 waitSeconds = 2f;
-                
+
             }
 
 
@@ -296,7 +295,7 @@ public class battleSystem : MonoBehaviour
                 enemyUnit.isBlocking = true;
                 enemyUnit.currentAp--;
                 waitSeconds = 2f;
-                
+
             }
             else if (randNum > 5)
             {
@@ -306,7 +305,7 @@ public class battleSystem : MonoBehaviour
 
         }
 
-        
+
 
 
     }
@@ -322,7 +321,7 @@ public class battleSystem : MonoBehaviour
             yield return new WaitForSeconds(3f);
             Destroy(enemy);
             Start();
-            
+
 
 
 
@@ -345,7 +344,7 @@ public class battleSystem : MonoBehaviour
 
     public void isOver(Unit unit)
     {
-        
+
         if (unit._tag == UnitTag.ENEMY)
         {
 
@@ -374,7 +373,7 @@ public class battleSystem : MonoBehaviour
                 turnCount++;
                 state = battleState.PLAYER_TURN;
                 enemyUnit.currentAp++;
-              
+
                 playerTurn();
             }
         }
@@ -389,7 +388,7 @@ public class battleSystem : MonoBehaviour
             unit.GetComponent<AnimationController>().PlayAction("Hit");
             unit.tookDmg = false;
         }
-        
+
     }
 
     void Update()
@@ -408,7 +407,7 @@ public class battleSystem : MonoBehaviour
         else
         {
             strongAttack.interactable = true;
-            
+
         }
 
         if (playerUnit.currentAp < 1)
@@ -419,13 +418,13 @@ public class battleSystem : MonoBehaviour
         {
             blockButton.interactable = true;
         }
-        
-      
+
+
 
     }
 
-    
-    
 
-    
+
+
+
 }
