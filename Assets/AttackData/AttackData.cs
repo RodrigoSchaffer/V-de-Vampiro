@@ -17,5 +17,6 @@ public enum AttackType
 {
     Physical,
     Magical,
-    Vampiric
+    Vampiric,
+    Status
 }

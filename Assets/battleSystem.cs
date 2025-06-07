@@ -69,7 +69,7 @@ public class battleSystem : MonoBehaviour
             playerUnit.currentHp = playerUnit.maxHp;
         }
 
-        enemy = Instantiate(enemies[Random.Range(0, 2)],
+        enemy = Instantiate(enemies[Random.Range(0, 3)],
         battleStation.GetChild(1).transform);
         enemyUnit = enemy.GetComponent<Unit>();
         enemyUnit._tag = UnitTag.ENEMY;
@@ -334,6 +334,7 @@ public class battleSystem : MonoBehaviour
             Destroy(playerGO);
             playerGO = null;
             Destroy(enemy);
+            turnCount = 0;
             Start();
 
 
