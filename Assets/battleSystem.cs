@@ -82,8 +82,8 @@ public class battleSystem : MonoBehaviour
 
         combatLog.text = "An enemy " + enemyUnit.unitName + " appears";
 
-        enemyAnim.target = playerUnit;
-        playerAnim.target = enemyUnit;
+        enemyUnit.target = playerUnit;
+        playerUnit.target = enemyUnit;
 
         yield return new WaitForSeconds(2f);
 
@@ -132,7 +132,7 @@ public class battleSystem : MonoBehaviour
         }
     }
 
-    private IEnumerator MoveToPosition(UnityEngine.Vector3 destination, Unit unit)
+    private IEnumerator MoveToPosition(Vector3 destination, Unit unit)
     {
         if (unit._tag == UnitTag.PLAYER)
         {

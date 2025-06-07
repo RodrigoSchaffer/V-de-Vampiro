@@ -40,17 +40,6 @@ public class AnimationController : MonoBehaviour
         return isPlayingAction;
     }
 
-    public int dealDmg()
-    {
-        if (target != null)
-        {
-            int a = target.takeDmg(dmg);
-            return a;
-        }
-
-        return 0;
-    }
-
     
 
 }

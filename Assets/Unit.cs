@@ -24,33 +24,31 @@ public class Unit : MonoBehaviour
     
     public List<AttackData> attacks;
 
+    private AttackData chosenAttack;
 
-    public int takeDmg(int dmg)
+    public Unit target;
+
+
+    public void dealDmg()
     {
+        if (target != null) {
 
-        if (isBlocking == true)
-        {
-            int damage = dmg - block;
+            if (isBlocking == true)
+            {
+                int damage = chosenAttack.damage - target.block;
+                if (damage == 0) {
+                    damage = 0;                    
+                }
 
-            return loseHealth(damage);
+                target.currentHp -= damage;
+                tookDmg = true;
+            }
+            else
+            {
+                target.currentHp -= chosenAttack.damage;
+                tookDmg = true;
+            }
         }
-        else
-        {
-
-            return loseHealth(dmg);
-        }
-
-
-    }
-
-    public int loseHealth(int dmg)
-    {
-
-        currentHp -= dmg;
-
-        tookDmg = true;
-        return dmg;
-
 
     }
 
@@ -67,7 +65,7 @@ public class Unit : MonoBehaviour
         }
 
         currentAp -= attack.apCost;
-        ac.dmg = attack.damage;
+        chosenAttack = attack;
         ac.PlayAction(attack._attackAnim);
         return $"{unitName} used {attack.attackName}.";
     }
