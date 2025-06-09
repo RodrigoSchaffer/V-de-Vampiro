@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: ff6a98675e5c1e244858a5be6be91fc5
+guid: cb3458ac60f7a1448a4d4850bb29775a
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -6778479752667450104
-    second: 20250420manaSoulHeaderA-Sheet_0
+      213: -513430830639937637
+    second: 20240707dragon9SlicesA_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: 20250420manaSoulHeaderA-Sheet_0
+      name: 20240707dragon9SlicesA_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 96
-        height: 32
+        width: 144
+        height: 144
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 805341134900ee1a0800000000000000
-      internalID: -6778479752667450104
+      spriteID: b9709fa316defd8f0800000000000000
+      internalID: -513430830639937637
       vertices: []
       indices: 
       edges: []
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      20250420manaSoulHeaderA-Sheet_0: -6778479752667450104
+      20240707dragon9SlicesA_0: -513430830639937637
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
