@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdd5fef68549c4a4faed88ff1852d524, type: 3}
   m_Name: Dive Slam
   m_EditorClassIdentifier: 
-  attackName: Dragon Fist
+  attackName: Dive Slam
   damage: 40
   apCost: 0
-  description: 'Punchs the enemy with a '
+  description: Dives and hits the enemy with its fist
   type: 0
   _attackAnim: Attack
