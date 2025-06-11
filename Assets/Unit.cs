@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
+using UnityEngine.UI;
 
 
 public enum UnitState { ALIVE, DEAD}
@@ -12,7 +13,6 @@ public class Unit : MonoBehaviour
 {
 
     public string unitName;
-    public int unitDmg;
     public int block;
     public bool isBlocking;
     public int maxHp;
@@ -20,6 +20,7 @@ public class Unit : MonoBehaviour
     public int maxAp;
     public int currentAp;
     public bool tookDmg;
+    [SerializeField]public Sprite unitPic;
 
     public UnitState state;
 

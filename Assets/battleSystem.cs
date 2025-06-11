@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -33,6 +34,11 @@ public class battleSystem : MonoBehaviour
 
 
     public int turnCount;
+    public List<GameObject> lights;
+    public dayTime dayAndNight;
+    public int dayAndNightCycle;
+    public List<Sprite> battleBackgroundList;
+    public GameObject battleBackground; 
     public int winCount;
 
     public BattleHud playerHud;
@@ -49,6 +55,15 @@ public class battleSystem : MonoBehaviour
 
 
 
+
+    void Awake()
+    {
+        lights[0].SetActive(true);
+        dayAndNight = dayTime.Day;
+        battleBackground.GetComponent<SpriteRenderer>()
+        .sprite = battleBackgroundList[Random.Range(0, 8)];
+
+    }
 
     void Start()
     {
@@ -371,6 +386,7 @@ public class battleSystem : MonoBehaviour
             else
             {
                 turnCount++;
+                dayAndNightCycle++;
                 state = battleState.PLAYER_TURN;
                 enemyUnit.currentAp++;
 
@@ -393,6 +409,29 @@ public class battleSystem : MonoBehaviour
 
     void Update()
     {
+        if (dayAndNight == dayTime.Day)
+        {
+            if (dayAndNightCycle == 3)
+            {
+                lights[0].SetActive(false);
+                dayAndNight = dayTime.Night;
+                lights[1].SetActive(true);
+                dayAndNightCycle = 0;
+            }
+        }
+        else
+        {
+            if (dayAndNightCycle == 3)
+            {
+                lights[1].SetActive(false);
+                dayAndNight = dayTime.Day;
+                lights[0].SetActive(true);
+                dayAndNightCycle = 0;
+            }
+
+        }
+        
+
         gotHit(playerUnit);
         gotHit(enemyUnit);
 

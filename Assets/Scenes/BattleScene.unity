@@ -395,7 +395,7 @@ GameObject:
   m_Component:
   - component: {fileID: 160418554}
   m_Layer: 5
-  m_Name: Attack Buttons
+  m_Name: CombatPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1295,7 +1295,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitName: Dragon
-  unitDmg: 20
   block: 15
   isBlocking: 0
   maxHp: 250
@@ -1303,6 +1302,7 @@ MonoBehaviour:
   maxAp: 2
   currentAp: 0
   tookDmg: 0
+  unitPic: {fileID: 0}
   state: 0
   _tag: 1
   _unitType: 3
@@ -2692,7 +2692,7 @@ Transform:
   m_GameObject: {fileID: 1023198092}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -25.279987, y: 27.000076, z: -3.524178}
+  m_LocalPosition: {x: -25.279987, y: 26.61, z: -3.524178}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2861,7 +2861,7 @@ Transform:
   m_GameObject: {fileID: 1093949756}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.5056825, y: -0.7277349, z: -3.5267577}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3291,6 +3291,21 @@ MonoBehaviour:
   playerGO: {fileID: 0}
   enemy: {fileID: 0}
   turnCount: 0
+  lights:
+  - {fileID: 1450662565}
+  - {fileID: 405401646}
+  dayAndNight: 0
+  dayAndNightCycle: 0
+  battleBackgroundList:
+  - {fileID: 21300000, guid: 648a542d1ff61ed4b91c2168e28b1f4c, type: 3}
+  - {fileID: 21300000, guid: b2b4538954098fc469539560ad65839e, type: 3}
+  - {fileID: 21300000, guid: 5564c0eae7436594ea9853c8721b0774, type: 3}
+  - {fileID: 21300000, guid: 63e4e13cb5763da4a9756802507a1a5e, type: 3}
+  - {fileID: 21300000, guid: aa829ab20aaaea445895cadd29add1a3, type: 3}
+  - {fileID: 21300000, guid: af4c1344fe08baf45a74d6c0f85dd3b7, type: 3}
+  - {fileID: 21300000, guid: 1531ddf53cd9ac049ba990e8d96e9551, type: 3}
+  - {fileID: 21300000, guid: c42577e32648d7f41ace3e8e6caa70fd, type: 3}
+  battleBackground: {fileID: 1920755965}
   winCount: 0
   playerHud: {fileID: 2022555910}
   enemyHud: {fileID: 1692537904}
@@ -3917,7 +3932,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 206975794789772215, guid: 886494ae44ceb344e97bb0548372fc1d, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -4492,6 +4507,7 @@ MonoBehaviour:
   apText: {fileID: 1466815298}
   hpSlider: {fileID: 889371751}
   apSlider: {fileID: 1110516709}
+  unitPic: {fileID: 1464977906}
 --- !u!224 &1692537905
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4738,7 +4754,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitName: Pope
-  unitDmg: 20
   block: 15
   isBlocking: 0
   maxHp: 220
@@ -4746,6 +4761,7 @@ MonoBehaviour:
   maxAp: 4
   currentAp: 0
   tookDmg: 0
+  unitPic: {fileID: 0}
   state: 0
   _tag: 1
   _unitType: 0
@@ -5108,7 +5124,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 1531ddf53cd9ac049ba990e8d96e9551, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 648a542d1ff61ed4b91c2168e28b1f4c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -5128,8 +5144,8 @@ Transform:
   m_GameObject: {fileID: 1920755965}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -25.8878, y: 26.4582, z: 0}
-  m_LocalScale: {x: 2.2758677, y: 1.7464317, z: 1.3429108}
+  m_LocalPosition: {x: -25.9134, y: 26.4434, z: 0}
+  m_LocalScale: {x: 2.8444896, y: 2.1827748, z: 1.6784348}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -5191,7 +5207,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 64b73fd4b54131546a84322d15dd81d2, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -5727,6 +5743,7 @@ MonoBehaviour:
   apText: {fileID: 1638243473}
   hpSlider: {fileID: 429507456}
   apSlider: {fileID: 633412042}
+  unitPic: {fileID: 1921758320}
 --- !u!1 &2036499302
 GameObject:
   m_ObjectHideFlags: 0
@@ -6260,7 +6277,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitName: Nyx
-  unitDmg: 30
   block: 20
   isBlocking: 0
   maxHp: 150
@@ -6268,6 +6284,7 @@ MonoBehaviour:
   maxAp: 4
   currentAp: 0
   tookDmg: 0
+  unitPic: {fileID: 21300000, guid: 64b73fd4b54131546a84322d15dd81d2, type: 3}
   state: 0
   _tag: 0
   _unitType: 0
@@ -6484,7 +6501,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitName: Jailer
-  unitDmg: 30
   block: 20
   isBlocking: 0
   maxHp: 300
@@ -6492,6 +6508,7 @@ MonoBehaviour:
   maxAp: 2
   currentAp: 0
   tookDmg: 0
+  unitPic: {fileID: 0}
   state: 0
   _tag: 1
   _unitType: 2
@@ -6603,7 +6620,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitName: Acolyte
-  unitDmg: 20
   block: 15
   isBlocking: 0
   maxHp: 175
@@ -6611,6 +6627,7 @@ MonoBehaviour:
   maxAp: 4
   currentAp: 0
   tookDmg: 0
+  unitPic: {fileID: 206975794789772215, guid: 886494ae44ceb344e97bb0548372fc1d, type: 3}
   state: 0
   _tag: 1
   _unitType: 1

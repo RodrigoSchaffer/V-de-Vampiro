@@ -9,6 +9,7 @@ public class BattleHud : MonoBehaviour
     public Text apText;
     public Slider hpSlider;
     public Slider apSlider;
+    public Image unitPic;
 
     public void setHuD(Unit unit)
     {
@@ -19,6 +20,10 @@ public class BattleHud : MonoBehaviour
         hpSlider.value = unit.currentHp;
         apSlider.maxValue = unit.maxAp;
         apSlider.value = unit.currentAp;
+        if (unit.unitPic != null) {
+            
+        unitPic.GetComponent<Image>().sprite = unit.unitPic;
+        }
     }
 
     public void setHp(Unit unit)
