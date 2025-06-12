@@ -60,8 +60,16 @@ public class battleSystem : MonoBehaviour
     {
         lights[0].SetActive(true);
         dayAndNight = dayTime.Day;
-        battleBackground.GetComponent<SpriteRenderer>()
-        .sprite = battleBackgroundList[Random.Range(0, 8)];
+        int backgroundChoice = 0;
+        do
+        {
+            backgroundChoice = Random.Range(0, 8);
+        } while (backgroundChoice % 2 != 0);
+        {
+            battleBackground.GetComponent<SpriteRenderer>()
+            .sprite = battleBackgroundList[backgroundChoice];
+        }
+        
 
     }
 
@@ -110,39 +118,57 @@ public class battleSystem : MonoBehaviour
     {
         if (unit._tag == UnitTag.PLAYER)
         {
-
-            originalPosition = battleStation.GetChild(0).position;
-            Transform target = battleStation.GetChild(1);
-
-            Vector3 direction = (target.position - playerUnit.transform.position).normalized;
-
-            yield return StartCoroutine(MoveToPosition(target.position - direction * approachDistance, playerUnit));
+            if (unit.attacks[attackIndex]._attackRange != AttackRange.Ranged)
+            {
 
 
-            combatLog.text = unit.UseAttack(unit.attacks[attackIndex], playerAnim);
 
-            yield return new WaitForSeconds(0.5f);
+                originalPosition = battleStation.GetChild(0).position;
+                Transform target = battleStation.GetChild(1);
+
+                Vector3 direction = (target.position - playerUnit.transform.position).normalized;
+
+                yield return StartCoroutine(MoveToPosition(target.position - direction * approachDistance, playerUnit));
 
 
-            yield return StartCoroutine(MoveToPosition(originalPosition, playerUnit));
+                combatLog.text = unit.UseAttack(unit.attacks[attackIndex], playerAnim);
+
+                yield return new WaitForSeconds(0.5f);
+
+
+                yield return StartCoroutine(MoveToPosition(originalPosition, playerUnit));
+            }
+            else 
+            {
+                combatLog.text = unit.UseAttack(unit.attacks[attackIndex], playerAnim);
+            }
         }
         else
         {
-            originalPosition = battleStation.GetChild(1).position;
-            Transform target = battleStation.GetChild(0);
-
-            Vector3 direction = (target.position - enemyUnit.transform.position).normalized;
+            if (unit.attacks[attackIndex]._attackRange != AttackRange.Ranged)
+            {
 
 
+                originalPosition = battleStation.GetChild(1).position;
+                Transform target = battleStation.GetChild(0);
 
-            yield return StartCoroutine(MoveToPosition(target.position - direction * approachDistance, enemyUnit));
-
-
-            combatLog.text = unit.UseAttack(unit.attacks[attackIndex], enemyAnim);
+                Vector3 direction = (target.position - enemyUnit.transform.position).normalized;
 
 
 
-            yield return StartCoroutine(MoveToPosition(originalPosition, enemyUnit));
+                yield return StartCoroutine(MoveToPosition(target.position - direction * approachDistance, enemyUnit));
+
+
+                combatLog.text = unit.UseAttack(unit.attacks[attackIndex], enemyAnim);
+
+
+
+                yield return StartCoroutine(MoveToPosition(originalPosition, enemyUnit));
+            }
+            else
+            {
+                combatLog.text = unit.UseAttack(unit.attacks[attackIndex], enemyAnim);
+            }
         }
     }
 
@@ -407,6 +433,15 @@ public class battleSystem : MonoBehaviour
 
     }
 
+    public void UpdateBackground(int n)
+    {
+        int index = battleBackgroundList.IndexOf(battleBackground.GetComponent<SpriteRenderer>().sprite);
+        if (index == 0) {
+            n = 0;
+        }
+        battleBackground.GetComponent<SpriteRenderer>().sprite = battleBackgroundList[index + n];
+    }
+
     void Update()
     {
         if (dayAndNight == dayTime.Day)
@@ -415,6 +450,7 @@ public class battleSystem : MonoBehaviour
             {
                 lights[0].SetActive(false);
                 dayAndNight = dayTime.Night;
+                UpdateBackground(1);
                 lights[1].SetActive(true);
                 dayAndNightCycle = 0;
             }
@@ -425,6 +461,7 @@ public class battleSystem : MonoBehaviour
             {
                 lights[1].SetActive(false);
                 dayAndNight = dayTime.Day;
+                UpdateBackground(-1);
                 lights[0].SetActive(true);
                 dayAndNightCycle = 0;
             }

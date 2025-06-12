@@ -17,4 +17,5 @@ MonoBehaviour:
   apCost: 2
   description: Fire that deals bonus dmg to vampires
   type: 1
+  _attackRange: 1
   _attackAnim: Attack2

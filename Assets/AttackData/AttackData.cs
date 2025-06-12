@@ -8,6 +8,7 @@ public class AttackData : ScriptableObject
     public int apCost;
     public string description;
     public AttackType type;
+    public AttackRange _attackRange;
     public string _attackAnim;
 
     
@@ -19,4 +20,9 @@ public enum AttackType
     Magical,
     Vampiric,
     Status
+}
+public enum AttackRange
+{
+    Melee,
+    Ranged
 }
