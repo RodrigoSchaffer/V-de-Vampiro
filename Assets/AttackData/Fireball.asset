@@ -19,3 +19,5 @@ MonoBehaviour:
   type: 1
   _attackRange: 1
   _attackAnim: Attack2
+  projectilePrefab: {fileID: 2170145857777124603, guid: 6b749c6f28a77f540a9d7dfe657b09f0, type: 3}
+  hitTargetEffect: {fileID: 0}

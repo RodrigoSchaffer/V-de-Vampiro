@@ -10,6 +10,8 @@ public class AttackData : ScriptableObject
     public AttackType type;
     public AttackRange _attackRange;
     public string _attackAnim;
+    public GameObject projectilePrefab;
+    public GameObject hitTargetEffect;
 
     
 }

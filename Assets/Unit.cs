@@ -105,6 +105,34 @@ public class Unit : MonoBehaviour
         return $"{unitName} used {attack.attackName}.";
     }
 
+    public void playProjectileVFX()
+    {
+        StartCoroutine(moveProjectileVFX());
+    }
+
+    public IEnumerator moveProjectileVFX()
+    {
+        GameObject projectile = Instantiate(chosenAttack.projectilePrefab, transform.position, Quaternion.identity);
+        float travelSpeed = 10f;
+
+
+        while (Vector3.Distance(projectile.transform.position, target.transform.position) > 0.1f)
+        {
+            projectile.transform.position = Vector3.MoveTowards(projectile.transform.position, target.transform.position, travelSpeed * Time.deltaTime);
+            yield return null;
+        }
+
+        onHitFX(projectile);
+        
+
+    }
+
+    public void onHitFX(GameObject projectile)
+    {
+        Destroy(projectile);
+        dealDmg();
+    }
+
     void Update()
     {
         if (currentHp <= 0)
