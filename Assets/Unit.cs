@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -68,14 +69,23 @@ public class Unit : MonoBehaviour
                 case AttackType.Physical:
                     target.currentHp -= damage;
                     target.tookDmg = true;
+                    if (chosenAttack.hitTargetEffect != null) {
+                    StartCoroutine(onHitFX());
+                    }
                     break;
                 case AttackType.Magical:
                     target.currentHp -= damage;
                     target.tookDmg = true;
+                    if (chosenAttack.hitTargetEffect != null) {
+                    StartCoroutine(onHitFX());
+                    }
                     break;
                 case AttackType.Vampiric:
                     target.currentHp -= damage;
                     target.tookDmg = true;
+                    if (chosenAttack.hitTargetEffect != null) {
+                    StartCoroutine(onHitFX());
+                    }
                     Heal(damage);
                     break;
             }
@@ -121,16 +131,22 @@ public class Unit : MonoBehaviour
             projectile.transform.position = Vector3.MoveTowards(projectile.transform.position, target.transform.position, travelSpeed * Time.deltaTime);
             yield return null;
         }
-
-        onHitFX(projectile);
+        Destroy(projectile);
+        dealDmg();
         
 
     }
 
-    public void onHitFX(GameObject projectile)
+    public IEnumerator onHitFX()
     {
-        Destroy(projectile);
-        dealDmg();
+        GameObject hitFX = Instantiate(chosenAttack.hitTargetEffect, target.transform.position, Quaternion.identity);
+        yield return new WaitForSeconds(0.5f);
+        if (target.tookDmg == false)
+        {
+
+            Destroy(hitFX);
+
+        }
     }
 
     void Update()
@@ -158,6 +174,8 @@ public class Unit : MonoBehaviour
         {
             currentAp = 0;
         }
+        
+        
 
 
     }

@@ -17,4 +17,7 @@ MonoBehaviour:
   apCost: 0
   description: Dives and hits the enemy with its fist
   type: 0
+  _attackRange: 0
   _attackAnim: Attack
+  projectilePrefab: {fileID: 0}
+  hitTargetEffect: {fileID: 5313626311689220904, guid: 7ed8377acb5c16f429738204363054c5, type: 3}
