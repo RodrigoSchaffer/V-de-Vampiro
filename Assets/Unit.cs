@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -117,22 +118,39 @@ public class Unit : MonoBehaviour
 
     public void playProjectileVFX()
     {
-        StartCoroutine(moveProjectileVFX());
+            StartCoroutine(moveProjectileVFX());
+        
     }
 
     public IEnumerator moveProjectileVFX()
     {
-        GameObject projectile = Instantiate(chosenAttack.projectilePrefab, transform.position, Quaternion.identity);
-        float travelSpeed = 10f;
 
-
-        while (Vector3.Distance(projectile.transform.position, target.transform.position) > 0.1f)
+        if (chosenAttack._attackRange == AttackRange.Ranged)
         {
-            projectile.transform.position = Vector3.MoveTowards(projectile.transform.position, target.transform.position, travelSpeed * Time.deltaTime);
-            yield return null;
+
+
+            GameObject projectile = Instantiate(chosenAttack.projectilePrefab, transform.position, Quaternion.identity);
+            float travelSpeed = 10f;
+
+
+            while (Vector3.Distance(projectile.transform.position, target.transform.position) > 0.1f)
+            {
+                projectile.transform.position = Vector3.MoveTowards(projectile.transform.position, target.transform.position, travelSpeed * Time.deltaTime);
+                yield return null;
+            }
+            Destroy(projectile);
+            dealDmg();
         }
-        Destroy(projectile);
-        dealDmg();
+        else if (chosenAttack._attackRange == AttackRange.Fall)
+        {
+            Vector3 attackPos = new Vector3(target.transform.position.x, target.transform.position.y + 1, 0);
+            GameObject projectile = Instantiate(chosenAttack.projectilePrefab, attackPos, quaternion.identity);
+            yield return new WaitForSeconds(0.4f);
+            float a = projectile.transform.position.y -1;
+            dealDmg();
+            yield return new WaitForSeconds(0.3f);
+            Destroy(projectile);
+        }
         
 
     }
@@ -147,6 +165,11 @@ public class Unit : MonoBehaviour
             Destroy(hitFX);
 
         }
+    }
+
+    public void setInactive()
+    {
+        gameObject.SetActive(false);
     }
 
     void Update()

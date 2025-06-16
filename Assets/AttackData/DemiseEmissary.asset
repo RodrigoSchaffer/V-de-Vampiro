@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bdd5fef68549c4a4faed88ff1852d524, type: 3}
-  m_Name: Leech
+  m_Name: DemiseEmissary
   m_EditorClassIdentifier: 
-  attackName: Leech
-  damage: 50
-  apCost: 2
-  description: Hit enemies and heal for half the damage
-  type: 0
-  _attackRange: 0
-  _attackAnim: Attack2
-  projectilePrefab: {fileID: 0}
+  attackName: Demise
+  damage: 35
+  apCost: 0
+  description: 
+  type: 2
+  _attackRange: 2
+  _attackAnim: Attack
+  projectilePrefab: {fileID: 4025011000419610042, guid: 1ccda3a30e3e36f43a9b5acd2df4a300, type: 3}
   hitTargetEffect: {fileID: 0}

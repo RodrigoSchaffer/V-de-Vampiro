@@ -82,6 +82,7 @@ public class battleSystem : MonoBehaviour
 
     IEnumerator setUpBattle()
     {
+
         if (playerGO == null)
         {
             playerGO = Instantiate(player, battleStation.GetChild(0).transform);
@@ -89,7 +90,7 @@ public class battleSystem : MonoBehaviour
             winCount = 0;
         }
 
-        enemy = Instantiate(enemies[Random.Range(0, 3)],
+        enemy = Instantiate(enemies[Random.Range(0, 4)],
         battleStation.GetChild(1).transform);
         enemyUnit = enemy.GetComponent<Unit>();
         enemyUnit._tag = UnitTag.ENEMY;
@@ -118,7 +119,7 @@ public class battleSystem : MonoBehaviour
     {
         if (unit._tag == UnitTag.PLAYER)
         {
-            if (unit.attacks[attackIndex]._attackRange != AttackRange.Ranged)
+            if (unit.attacks[attackIndex]._attackRange == AttackRange.Melee)
             {
 
 
@@ -145,7 +146,7 @@ public class battleSystem : MonoBehaviour
         }
         else
         {
-            if (unit.attacks[attackIndex]._attackRange != AttackRange.Ranged)
+            if (unit.attacks[attackIndex]._attackRange == AttackRange.Melee)
             {
 
 
@@ -370,6 +371,7 @@ public class battleSystem : MonoBehaviour
         else if (state == battleState.LOST)
         {
             combatLog.text = "You Lost.";
+            playerAnim.PlayAction("Death");
             yield return new WaitForSeconds(3f);
             Destroy(playerGO);
             playerGO = null;

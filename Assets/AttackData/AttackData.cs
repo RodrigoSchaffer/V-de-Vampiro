@@ -26,5 +26,6 @@ public enum AttackType
 public enum AttackRange
 {
     Melee,
-    Ranged
+    Ranged,
+    Fall
 }
