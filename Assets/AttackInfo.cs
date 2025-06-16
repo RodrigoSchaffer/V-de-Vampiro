@@ -24,7 +24,7 @@ public class AttackInfo : MonoBehaviour
                 infoPanel.SetActive(true);
                 damageText.text = "Damage: " + moonLitAttack;
                 apCost.text = "Ap Cost: " + attack.apCost;
-                descriptionText.text = attack.description + " And heals for the damage amount";
+                descriptionText.text = attack.description + " And heals itself by the damage amount";
                 break;
         }
 
