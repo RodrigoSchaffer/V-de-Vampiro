@@ -15,7 +15,7 @@ MonoBehaviour:
   attackName: Demise
   damage: 35
   apCost: 0
-  description: 
+  description: Call Demise upon your foes.
   type: 2
   _attackRange: 2
   _attackAnim: Attack

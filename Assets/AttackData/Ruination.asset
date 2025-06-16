@@ -15,7 +15,7 @@ MonoBehaviour:
   attackName: Ruination
   damage: 50
   apCost: 2
-  description: 
+  description: Bring Ruin on your enemies.
   type: 2
   _attackRange: 0
   _attackAnim: Attack2

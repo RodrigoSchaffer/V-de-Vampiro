@@ -41,6 +41,7 @@ public class battleSystem : MonoBehaviour
     public Button strongAttack;
     public Button blockButton;
     public GameObject gameOverPanel;
+    public AttackInfo attackInfo;
 
     void Awake()
     {
@@ -342,6 +343,9 @@ public class battleSystem : MonoBehaviour
             winCount++;
             yield return new WaitForSeconds(3f);
             Destroy(enemy);
+            turnCount++;
+            dayAndNightCycle++;
+            playerUnit.currentAp++;
             Start();
 
 
@@ -448,6 +452,8 @@ public class battleSystem : MonoBehaviour
             }
 
         }
+        attackInfo.setTime(dayAndNight);
+        attackInfo.winCount(winCount);
 
 
         gotHit(playerUnit);
@@ -509,8 +515,6 @@ public class battleSystem : MonoBehaviour
                 }
                 break;
         }
-
-
 
     }
 
