@@ -6,6 +6,7 @@ public class BattleSceneManager : MonoBehaviour
     [SerializeField] private string menuSceneName;
 
     [SerializeField] private GameObject settingsPanel;
+    [SerializeField] private AudioListener sounds;
 
 
 
@@ -19,7 +20,8 @@ public class BattleSceneManager : MonoBehaviour
     {
         string battleSceneName = SceneManager.GetActiveScene().name;
         SceneManager.LoadScene(battleSceneName);
-        if (Time.timeScale == 0) {
+        if (Time.timeScale == 0)
+        {
             Time.timeScale = 1;
         }
     }
@@ -33,8 +35,21 @@ public class BattleSceneManager : MonoBehaviour
     public void backToMenuButton()
     {
         SceneManager.LoadScene(menuSceneName);
-        if (Time.timeScale == 0) {
+        if (Time.timeScale == 0)
+        {
             Time.timeScale = 1;
+        }
+    }
+
+    void Update()
+    {
+        if (Time.timeScale == 0)
+        {
+            AudioManager.pauseOst(0);
+        }
+        else
+        {
+            AudioManager.pauseOst(1);
         }
     }
 
