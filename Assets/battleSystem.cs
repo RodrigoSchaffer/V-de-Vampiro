@@ -13,48 +13,34 @@ public class battleSystem : MonoBehaviour
 {
 
     public GameObject player;
-
     public List<GameObject> enemies;
-
     public Unit playerUnit;
-
     public Unit enemyUnit;
-
     public Transform battleStation;
-
     public float moveSpeed = 8f;
     public Vector3 originalPosition;
     public float approachDistance = 1.5f;
     public float waitSeconds = 3.5f;
-
-
     public battleState state;
     public GameObject playerGO = null;
     public GameObject enemy;
-
-
     public int turnCount;
     public List<GameObject> lights;
     public dayTime dayAndNight;
     public int dayAndNightCycle;
     public List<Sprite> battleBackgroundList;
-    public GameObject battleBackground; 
+    public GameObject battleBackground;
+    public List<Sprite> currentTimeList;
+    public Image displayCurrentTime;
     public int winCount;
-
     public BattleHud playerHud;
     public BattleHud enemyHud;
-
     public Text combatLog;
-
     public AnimationController playerAnim;
-
     public AnimationController enemyAnim;
-
     public Button strongAttack;
     public Button blockButton;
-
-
-
+    public GameObject gameOverPanel;
 
     void Awake()
     {
@@ -121,9 +107,6 @@ public class battleSystem : MonoBehaviour
         {
             if (unit.attacks[attackIndex]._attackRange == AttackRange.Melee)
             {
-
-
-
                 originalPosition = battleStation.GetChild(0).position;
                 Transform target = battleStation.GetChild(1);
 
@@ -132,7 +115,7 @@ public class battleSystem : MonoBehaviour
                 yield return StartCoroutine(MoveToPosition(target.position - direction * approachDistance, playerUnit));
 
 
-                combatLog.text = unit.UseAttack(unit.attacks[attackIndex], playerAnim);
+                combatLog.text = unit.UseAttack(unit.attacks[attackIndex], playerAnim, dayAndNight);
 
                 yield return new WaitForSeconds(0.5f);
 
@@ -141,7 +124,7 @@ public class battleSystem : MonoBehaviour
             }
             else 
             {
-                combatLog.text = unit.UseAttack(unit.attacks[attackIndex], playerAnim);
+                combatLog.text = unit.UseAttack(unit.attacks[attackIndex], playerAnim, dayAndNight);
             }
         }
         else
@@ -160,7 +143,7 @@ public class battleSystem : MonoBehaviour
                 yield return StartCoroutine(MoveToPosition(target.position - direction * approachDistance, enemyUnit));
 
 
-                combatLog.text = unit.UseAttack(unit.attacks[attackIndex], enemyAnim);
+                combatLog.text = unit.UseAttack(unit.attacks[attackIndex], enemyAnim, dayAndNight);
 
 
 
@@ -168,7 +151,7 @@ public class battleSystem : MonoBehaviour
             }
             else
             {
-                combatLog.text = unit.UseAttack(unit.attacks[attackIndex], enemyAnim);
+                combatLog.text = unit.UseAttack(unit.attacks[attackIndex], enemyAnim, dayAndNight);
             }
         }
     }
@@ -208,7 +191,7 @@ public class battleSystem : MonoBehaviour
 
     }
 
-    IEnumerator playerAttack()
+    IEnumerator Attack1()
     {
         state = battleState.ENEMY_TURN;
         StartCoroutine(MoveToTargetAndBack(playerUnit, 0));
@@ -223,24 +206,24 @@ public class battleSystem : MonoBehaviour
 
     }
 
-    public void basicAttack()
+    public void firstAttack()
     {
         if (state != battleState.PLAYER_TURN)
         {
             return;
         }
 
-        StartCoroutine(playerAttack());
+        StartCoroutine(Attack1());
     }
 
-    public void leech()
+    public void secondAttack()
     {
         if (state != battleState.PLAYER_TURN)
         {
             return;
         }
 
-        StartCoroutine(leechAttack());
+        StartCoroutine(Attack2());
     }
 
     public void block()
@@ -253,7 +236,7 @@ public class battleSystem : MonoBehaviour
         StartCoroutine(blockAttacks());
     }
 
-    IEnumerator leechAttack()
+    IEnumerator Attack2()
     {
         state = battleState.ENEMY_TURN;
         StartCoroutine(MoveToTargetAndBack(playerUnit, 1));
@@ -351,9 +334,6 @@ public class battleSystem : MonoBehaviour
 
 
     }
-
-
-
     public IEnumerator EndBattle()
     {
         if (state == battleState.WON)
@@ -375,9 +355,7 @@ public class battleSystem : MonoBehaviour
             yield return new WaitForSeconds(3f);
             Destroy(playerGO);
             playerGO = null;
-            Destroy(enemy);
-            turnCount = 0;
-            Start();
+            gameOverPanel.SetActive(true);
 
 
         }
@@ -448,6 +426,7 @@ public class battleSystem : MonoBehaviour
     {
         if (dayAndNight == dayTime.Day)
         {
+
             if (dayAndNightCycle == 3)
             {
                 lights[0].SetActive(false);
@@ -469,7 +448,7 @@ public class battleSystem : MonoBehaviour
             }
 
         }
-        
+
 
         gotHit(playerUnit);
         gotHit(enemyUnit);
@@ -495,6 +474,40 @@ public class battleSystem : MonoBehaviour
         else
         {
             blockButton.interactable = true;
+        }
+
+        switch (dayAndNightCycle)
+        {
+            case 0:
+                if (dayAndNight == dayTime.Day)
+                {
+                    displayCurrentTime.sprite = currentTimeList[0];
+                }
+                else
+                {
+                    displayCurrentTime.sprite = currentTimeList[3];
+                }
+                break;
+            case 1:
+                if (dayAndNight == dayTime.Day)
+                {
+                    displayCurrentTime.sprite = currentTimeList[1];
+                }
+                else
+                {
+                    displayCurrentTime.sprite = currentTimeList[4];
+                }
+                break;
+            case 2:
+                if (dayAndNight == dayTime.Day)
+                {
+                    displayCurrentTime.sprite = currentTimeList[2];
+                }
+                else
+                {
+                    displayCurrentTime.sprite = currentTimeList[5];
+                }
+                break;
         }
 
 

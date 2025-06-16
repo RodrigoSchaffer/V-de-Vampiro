@@ -16,7 +16,7 @@ MonoBehaviour:
   damage: 35
   apCost: 0
   description: 'Hit the target with a rapier '
-  type: 1
+  type: 0
   _attackRange: 0
   _attackAnim: Attack
   projectilePrefab: {fileID: 0}

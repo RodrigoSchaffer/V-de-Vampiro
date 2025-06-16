@@ -23,27 +23,18 @@ public class Unit : MonoBehaviour
     public int currentAp;
     public bool tookDmg;
     [SerializeField]public Sprite unitPic;
-
     public UnitState state;
-
     public UnitTag _tag;
-
     public UnitType _unitType;
-
-
     public List<AttackData> attacks;
-
     private AttackData chosenAttack;
-
     public Unit target;
-
-
+    public dayTime currentTime;
     public void dealDmg()
     {
         int damage = 0;
         if (target != null)
         {
-
             if (isBlocking == true)
             {
                 damage = chosenAttack.damage - target.block;
@@ -51,8 +42,6 @@ public class Unit : MonoBehaviour
                 {
                     damage = 0;
                 }
-
-                
             }
             else
             {
@@ -61,33 +50,58 @@ public class Unit : MonoBehaviour
                 {
                     damage = 0;
                 }
-                
             }
-
-
             switch (chosenAttack.type)
             {
                 case AttackType.Physical:
                     target.currentHp -= damage;
                     target.tookDmg = true;
-                    if (chosenAttack.hitTargetEffect != null) {
-                    StartCoroutine(onHitFX());
+                    if (chosenAttack.hitTargetEffect != null)
+                    {
+                        StartCoroutine(onHitFX());
                     }
                     break;
                 case AttackType.Magical:
                     target.currentHp -= damage;
                     target.tookDmg = true;
-                    if (chosenAttack.hitTargetEffect != null) {
-                    StartCoroutine(onHitFX());
+                    if (chosenAttack.hitTargetEffect != null)
+                    {
+                        StartCoroutine(onHitFX());
                     }
                     break;
                 case AttackType.Vampiric:
+                    if (currentTime == dayTime.Night)
+                    {
+                        damage += 10;
+                        target.currentHp -= damage;
+                        target.tookDmg = true;
+                        if (chosenAttack.hitTargetEffect != null)
+                        {
+                            StartCoroutine(onHitFX());
+                        }
+                        Heal(damage);
+                    }
+                    else
+                    {
+                        target.currentHp -= damage;
+                        target.tookDmg = true;
+                        if (chosenAttack.hitTargetEffect != null)
+                        {
+                            StartCoroutine(onHitFX());
+                        }
+                    }                  
+                    break;
+                case AttackType.Sacred:
+                    if (target._unitType == UnitType.Vampire)
+                    {
+                        damage += 10;
+                    }
                     target.currentHp -= damage;
                     target.tookDmg = true;
-                    if (chosenAttack.hitTargetEffect != null) {
-                    StartCoroutine(onHitFX());
+                    if (chosenAttack.hitTargetEffect != null)
+                    {
+                        StartCoroutine(onHitFX());
                     }
-                    Heal(damage);
                     break;
             }
         }
@@ -100,10 +114,10 @@ public class Unit : MonoBehaviour
 
     public void Heal(int damage)
     {
-        currentHp += damage / 2;
+        currentHp += damage;
     }
 
-    public string UseAttack(AttackData attack, AnimationController ac)
+    public string UseAttack(AttackData attack, AnimationController ac, dayTime time)
     {
         if (currentAp < attack.apCost)
         {
@@ -112,6 +126,7 @@ public class Unit : MonoBehaviour
 
         currentAp -= attack.apCost;
         chosenAttack = attack;
+        currentTime = time;
         ac.PlayAction(attack._attackAnim);
         return $"{unitName} used {attack.attackName}.";
     }
@@ -146,7 +161,6 @@ public class Unit : MonoBehaviour
             Vector3 attackPos = new Vector3(target.transform.position.x, target.transform.position.y + 1, 0);
             GameObject projectile = Instantiate(chosenAttack.projectilePrefab, attackPos, quaternion.identity);
             yield return new WaitForSeconds(0.4f);
-            float a = projectile.transform.position.y -1;
             dealDmg();
             yield return new WaitForSeconds(0.3f);
             Destroy(projectile);

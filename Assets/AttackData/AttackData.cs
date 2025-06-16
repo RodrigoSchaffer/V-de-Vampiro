@@ -21,6 +21,7 @@ public enum AttackType
     Physical,
     Magical,
     Vampiric,
+    Sacred,
     Status
 }
 public enum AttackRange

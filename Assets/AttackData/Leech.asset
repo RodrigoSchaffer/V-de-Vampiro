@@ -16,7 +16,7 @@ MonoBehaviour:
   damage: 50
   apCost: 2
   description: Hit enemies and heal for half the damage
-  type: 0
+  type: 3
   _attackRange: 0
   _attackAnim: Attack2
   projectilePrefab: {fileID: 0}
