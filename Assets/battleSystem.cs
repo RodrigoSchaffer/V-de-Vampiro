@@ -462,6 +462,15 @@ public class battleSystem : MonoBehaviour
         enemyHud.setHp(enemyUnit);
         playerHud.setHp(playerUnit);
 
+        if (dayAndNight == dayTime.Night)
+        {
+            playerUnit.block = 35;
+        }
+        else
+        {
+            playerUnit.block = 20;
+        }
+
         if (playerUnit.currentAp < 2)
         {
             strongAttack.interactable = false;

@@ -30,6 +30,26 @@ public class AttackInfo : MonoBehaviour
 
     }
 
+    public void showBlockInfo(Unit unit)
+    {
+        switch (dayOrNight)
+        {
+            case dayTime.Day:
+                infoPanel.SetActive(true);
+                damageText.text = "Block: " + unit.block;
+                apCost.text = "Ap Cost: " + 1;
+                descriptionText.text = "Reduce incoming damage by " + unit.block;
+                break;
+            case dayTime.Night:
+                int moonLitBlock = unit.block + 15;
+                infoPanel.SetActive(true);
+                damageText.text = "Block: " + moonLitBlock;
+                apCost.text = "Ap Cost: " + 1;
+                descriptionText.text = "Reduce incoming damage by " + moonLitBlock;
+                break;
+        }
+    }
+
     public void HideAttackInfo()
     {
         infoPanel.SetActive(false);
